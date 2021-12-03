@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.a222.databinding.FragmentSecondBinding
+import com.example.a222.util.SpinRoll
 import kotlin.random.Random
 
 
@@ -19,7 +20,9 @@ class SecondFragment : Fragment() {
     var startingHP = 5
 
     private lateinit var wordToGuess: String
-    var alphabet = "abcdefghijklmnopqrstuvwxyz".toCharArray()
+    private val imageViews by lazy {
+        arrayOf("a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z")
+    }
 
 private var _binding: FragmentSecondBinding? = null
     // This property is only valid between onCreateView and
@@ -32,7 +35,6 @@ private var _binding: FragmentSecondBinding? = null
     ): View? {
       _binding = FragmentSecondBinding.inflate(inflater, container, false)
       return binding.root
-//set up logic
 
     }
 
@@ -76,8 +78,9 @@ override fun onDestroyView() {
 
     fun spinningWheel():String {
         val editText = binding.USERTEXT
+        val wheel = SpinRoll.roll()
         var input = editText.text
-        var wheel = roll()
+       // var wheel = dice
 
 
         if (startingHP<1){
@@ -109,11 +112,11 @@ override fun onDestroyView() {
             }
         }
     }
-
+/*
     private fun roll(): Int {
         return (1..6).random()
     }
-
+*/
     fun guessAWord(){
         // print("Guess an Animal")
         val editText = binding.USERTEXT
