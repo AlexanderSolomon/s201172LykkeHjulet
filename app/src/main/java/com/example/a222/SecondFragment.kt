@@ -1,5 +1,6 @@
 package com.example.a222
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -18,11 +19,8 @@ import kotlin.random.Random
  */
 class SecondFragment : Fragment() {
     var startingHP = 5
-
     private lateinit var wordToGuess: String
-    private val imageViews by lazy {
-        arrayOf("a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z")
-    }
+
 
 private var _binding: FragmentSecondBinding? = null
     // This property is only valid between onCreateView and
@@ -50,12 +48,13 @@ private var _binding: FragmentSecondBinding? = null
         button3.visibility=View.GONE
 
 
-
+// spin function and gone / visable buttons
         button.setOnClickListener {
 text.text = spinningWheel()
             button2.visibility=View.VISIBLE
             button3.visibility=View.VISIBLE
-            button.visibility=View.GONE}
+            button.visibility=View.GONE
+        }
 
         button2.setOnClickListener { guessALetter()
             button.visibility=View.VISIBLE
@@ -69,6 +68,7 @@ text.text = spinningWheel()
 
                 text1.text = getRandomWord()
 
+
     }
 
 override fun onDestroyView() {
@@ -80,32 +80,30 @@ override fun onDestroyView() {
         val editText = binding.USERTEXT
         val wheel = SpinRoll.roll()
         var input = editText.text
+
        // var wheel = dice
 
-
-        if (startingHP<1){
+        if (startingHP<=0){
         gameLost()
         }
-
-
         when (wheel) {
             1 -> {
-                startingHP++; return ("sss:,$wheel,dd $startingHP")
+                startingHP++; return ("You spun nr:$wheel, and you win a spin")
             }
             2 -> {
-                startingHP ++; return ("abc,$wheel,$startingHP")
+                startingHP ++; return ("You spun nr:$wheel, and you win a spin")
             }
             3 -> {
-                startingHP--  ; return ("abc,$wheel,$startingHP")
+                 return ("You spun nr:$wheel, and you have $startingHP spins left")
             }
             4 -> {
-                startingHP ++ ; return ("abc,$wheel,$startingHP")
+                return ("You spun nr:$wheel,and you have $startingHP spins left")
             }
             5 -> {
-                startingHP--; return ("abc,$wheel,$startingHP")
+                startingHP--; return ("You spun nr:$wheel,you loose a spin")
             }
             6 -> {
-                startingHP--; return ("abc,$wheel,$startingHP")
+                startingHP--; return ("You spun nr:$wheel,you loose a spin")
             }
             else ->{
                 return ("hi")
@@ -117,7 +115,9 @@ override fun onDestroyView() {
         return (1..6).random()
     }
 */
-    fun guessAWord(){
+@SuppressLint("SetTextI18n")
+
+fun guessAWord(){
         // print("Guess an Animal")
         val editText = binding.USERTEXT
         val input = editText.text
@@ -130,8 +130,8 @@ override fun onDestroyView() {
         }else{
             //println("you guessed $input")
             //println("you were right u win the word was $wordToGuess")
-        textToUser.text ="you guessed wrong spin again."
-            startingHP--
+        textToUser.text ="you guessed wrong the game is lost."
+            gameLost()
         }
     }
 
@@ -139,27 +139,26 @@ override fun onDestroyView() {
        // println("guess a letter :")
         val editText = binding.USERTEXT
         val input = editText.text
-
+val textToUser: TextView= binding.textToUser
         //var input = readLine()
         if(wordToGuess.contains("$input", ignoreCase = true))
         {
-        gameWon()
+        startingHP++
+            textToUser.text= "You are right, The word contains a : $input"
+
         }
         else{
-            gameLost()
+            startingHP--
+            textToUser.text = "Your guess: $input, was wrong spin and try again "
         }
     }
-
 
     fun getRandomWord():String{
         val randomIndex = Random.nextInt(0, GameConstants.words.size)
         wordToGuess = GameConstants.words[randomIndex]
-
       //  println(wordToGuess)
      //   println(randomIndex)
-
     return wordToGuess
-
     }
 
     object GameConstants{
@@ -170,19 +169,17 @@ override fun onDestroyView() {
 
     }
 
-   fun storeValues(){
-       val editText = binding.USERTEXT
-       val input = editText.text
-       var numberList = input.map { it.digitToInt() }
-   }
-
     fun gameLost(){
     findNavController().navigate(R.id.action_SecondFragment_to_looserFragment)
 }
-
     fun gameWon(){
         findNavController().navigate(R.id.action_SecondFragment_to_winFragment)
     }
+    /*fun storeValues(){
+        val editText = binding.USERTEXT
+        val input = editText.text
+        var numberList = input.map { it.digitToInt() }
+    }*/
 }
 
 
